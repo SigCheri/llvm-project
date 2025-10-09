@@ -384,3 +384,4 @@ def SEED : SysReg<"seed", 0x015>;
 //===-----------------------------------------------
 
 include "RISCVSystemOperandsXCheri.td"
+include "RISCVSystemOperandsXSigCheri.td"
