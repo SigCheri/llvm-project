@@ -24,6 +24,8 @@ defvar decrypt_op = 0b1;
 defvar pec_funct3_mkey = 0b000;
 defvar pec_funct3_skey = 0b001;
 
+let Predicates = [HasKey] in {
+
 def CREMK : RVInstPEC<encrypt_op, pec_funct3_mkey, "cremk">, Sched<[WriteIALU, ReadIALU, ReadIALU]>;
 def CRDMK : RVInstPEC<decrypt_op, pec_funct3_mkey, "crdmk">, Sched<[WriteIALU, ReadIALU, ReadIALU]>;
 def CRESK : RVInstPEC<encrypt_op, pec_funct3_skey, "cresk">, Sched<[WriteIALU, ReadIALU, ReadIALU]>;
@@ -41,3 +43,5 @@ def : InstAlias<"cresk.low $rd, $rs1, $rs2",  (CRESK GPR:$rd, GPR:$rs1, GPR:$rs2
 def : InstAlias<"crdsk.full $rd, $rs1, $rs2", (CRDSK GPR:$rd, GPR:$rs1, GPR:$rs2, 0, 7)>;
 def : InstAlias<"crdsk.high $rd, $rs1, $rs2", (CRDSK GPR:$rd, GPR:$rs1, GPR:$rs2, 4, 7)>;
 def : InstAlias<"crdsk.low $rd, $rs1, $rs2",  (CRDSK GPR:$rd, GPR:$rs1, GPR:$rs2, 0, 3)>;
+
+}
