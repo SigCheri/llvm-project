@@ -473,12 +473,12 @@ def HasCheri : Predicate<"Subtarget->hasCheri()">,
                          AssemblerPredicate<(all_of FeatureCheri),
                          "CHERI Extension">;
 
-def FeatureKey
-    : SubtargetFeature<"xkey", "HasKey", "true",
-                       "Implements Key extension">;
-def HasKey : Predicate<"Subtarget->hasKey()">,
-                         AssemblerPredicate<(all_of FeatureKey),
-                         "Key Extension">;
+def FeatureSigCheri
+    : SubtargetFeature<"xsigcheri", "HasSigCheri", "true",
+                       "Implements SIGCHERI extension">;
+def HasSigCheri : Predicate<"Subtarget->hasSigCheri()">,
+                         AssemblerPredicate<(all_of FeatureSigCheri),
+                         "SigCheri Extension">;
 
 def FeatureCheriNoRVC
     : SubtargetFeature<"xcheri-norvc", "EnableCheriRVCInstrs", "false",

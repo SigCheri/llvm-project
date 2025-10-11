@@ -93,7 +93,7 @@ private:
   bool HasStdExtZmmul = false;
   bool HasRV64 = false;
   bool IsRV32E = false;
-  bool HasKey = false;
+  bool HasSigCheri = false;
   bool HasCheri = false;
   bool HasCheriISAv9Semantics = false;
   bool IsCapMode = false;
@@ -194,7 +194,7 @@ public:
   bool hasStdExtZmmul() const { return HasStdExtZmmul; }
   bool is64Bit() const { return HasRV64; }
   bool isRV32E() const { return IsRV32E; }
-  bool hasKey() const { return HasKey; }
+  bool hasSigCheri() const { return HasSigCheri; }
   bool hasCheri() const { return HasCheri; }
   bool hasCheriISAv9Semantics() const { return HasCheriISAv9Semantics; }
   bool isCapMode() const { return IsCapMode; }

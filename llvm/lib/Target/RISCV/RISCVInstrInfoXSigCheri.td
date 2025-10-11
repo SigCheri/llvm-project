@@ -10,6 +10,13 @@ class RVInstPEC<bit cryptoOp, bits<3> funct3, string opcodestr>
       let mayStore = 0;
 }
 
+defvar encrypt_op = 0b0;
+defvar decrypt_op = 0b1;
+defvar pec_funct3_mkey = 0b000;
+defvar pec_funct3_skey = 0b001;
+
+let Predicates = [HasSigCheri] in {
+
 /*
 
 cremk       ... ... 0  ..... ..... 000 ..... 1101011 @key_op
@@ -18,13 +25,6 @@ cresk       ... ... 0  ..... ..... 001 ..... 1101011 @key_op
 crdsk       ... ... 1  ..... ..... 001 ..... 1101011 @key_op
 
 */
-
-defvar encrypt_op = 0b0;
-defvar decrypt_op = 0b1;
-defvar pec_funct3_mkey = 0b000;
-defvar pec_funct3_skey = 0b001;
-
-let Predicates = [HasKey] in {
 
 def CREMK : RVInstPEC<encrypt_op, pec_funct3_mkey, "cremk">, Sched<[WriteIALU, ReadIALU, ReadIALU]>;
 def CRDMK : RVInstPEC<decrypt_op, pec_funct3_mkey, "crdmk">, Sched<[WriteIALU, ReadIALU, ReadIALU]>;
