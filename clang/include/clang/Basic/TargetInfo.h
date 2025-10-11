@@ -1582,6 +1582,7 @@ public:
 
   /// SupportsCapabilities - Returns true if the target supports capabilities.
   virtual bool SupportsCapabilities() const { return false; }
+  virtual bool SupportsSigCapabilities() const { return false; }
 
   enum CallingConvKind {
     CCK_Default,

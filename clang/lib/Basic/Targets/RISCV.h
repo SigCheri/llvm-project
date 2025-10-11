@@ -57,6 +57,7 @@ protected:
   std::unique_ptr<llvm::RISCVISAInfo> ISAInfo;
   int CapSize = -1;
   bool HasCheri = false;
+  bool HasSigCheri = false;
   bool HasCheriISAv9Semantics = false;
   void setCapabilityABITypes() {
     IntPtrType = TargetInfo::SignedIntCap;
@@ -150,6 +151,8 @@ public:
   }
 
   bool SupportsCapabilities() const override { return HasCheri; }
+
+  bool SupportsSigCapabilities() const override { return HasSigCheri; }
 
   bool validateTarget(DiagnosticsEngine &Diags) const override;
 

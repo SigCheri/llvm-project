@@ -312,6 +312,7 @@ bool RISCVTargetInfo::hasFeature(StringRef Feature) const {
                     .Case("riscv64", Is64Bit)
                     .Case("64bit", Is64Bit)
                     .Case("xcheri", HasCheri)
+                    .Case("xsigcheri", HasSigCheri)
                     .Default(None);
   if (Result)
     return Result.value();
@@ -343,6 +344,9 @@ bool RISCVTargetInfo::handleTargetFeatures(std::vector<std::string> &Features,
     CapSize = XLen * 2;
     HasCheriISAv9Semantics =
         llvm::is_contained(Features, "+xcheri-v9-semantics");
+  }
+  if (ISAInfo->hasExtension("xsigcheri")) {
+    HasSigCheri = true;
   }
   if (ABI.empty())
     ABI = ISAInfo->computeDefaultABI().str();
