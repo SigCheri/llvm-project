@@ -15,6 +15,32 @@ defvar decrypt_op = 0b1;
 defvar pec_funct3_mkey = 0b000;
 defvar pec_funct3_skey = 0b001;
 
+let hasSideEffects = 0, mayLoad = 1, mayStore = 0 in
+class Load_sig<bits<3> funct3, string opcodestr>
+    : RVInstI<funct3, OPC_SIG_LOAD, (outs GPR:$rd), (ins GPR:$rs1, simm12:$imm12),
+              opcodestr, "$rd, ${imm12}(${rs1})">;
+
+let hasSideEffects = 0, mayLoad = 0, mayStore = 1 in
+class Store_sig<bits<3> funct3, string opcodestr>
+    : RVInstS<funct3, OPC_SIG_STORE, (outs),
+              (ins GPR:$rs2, GPR:$rs1, simm12:$imm12),
+              opcodestr, "$rs2, ${imm12}(${rs1})">;
+
+// A 12-bit signed immediate where the least significant four bits are zero.
+def simm12_lsb000 : Operand<XLenVT>,
+                            ImmLeaf<XLenVT,
+                            [{return isShiftedInt<9, 3>(Imm);}]> {
+  let ParserMatchClass = SImmAsmOperand<12, "Lsb000">;
+  let EncoderMethod = "getImmOpValue";
+  let DecoderMethod = "decodeSImmOperand<12>";
+  let MCOperandPredicate = [{
+    int64_t Imm;
+    if (!MCOp.evaluateAsConstantImm(Imm))
+      return false;
+    return isShiftedInt<9, 3>(Imm);
+  }];
+}
+
 let Predicates = [HasSigCheri] in {
 
 /*
@@ -43,5 +69,58 @@ def : InstAlias<"cresk.low $rd, $rs1, $rs2",  (CRESK GPR:$rd, GPR:$rs1, GPR:$rs2
 def : InstAlias<"crdsk.full $rd, $rs1, $rs2", (CRDSK GPR:$rd, GPR:$rs1, GPR:$rs2, 0, 7)>;
 def : InstAlias<"crdsk.high $rd, $rs1, $rs2", (CRDSK GPR:$rd, GPR:$rs1, GPR:$rs2, 4, 7)>;
 def : InstAlias<"crdsk.low $rd, $rs1, $rs2",  (CRDSK GPR:$rd, GPR:$rs1, GPR:$rs2, 0, 3)>;
+
+/*
+
+lc_sig_t0   ............  ..... 000 ..... 0011111 @i
+lc_sig_t1   ............  ..... 001 ..... 0011111 @i
+lc_sig_t2   ............  ..... 010 ..... 0011111 @i
+lc_sig_t3   ............  ..... 011 ..... 0011111 @i
+lc_sig_t4   ............  ..... 100 ..... 0011111 @i
+lc_sig_t5   ............  ..... 101 ..... 0011111 @i
+lc_sig_t6   ............  ..... 110 ..... 0011111 @i
+lc_tweak    ......... ... ..... 111 ..... 0011111 @sig_load_tweak_op
+
+*/
+
+def LC_SIG_T0 : Load_sig<0b000, "lc.sig.t0">;
+def LC_SIG_T1 : Load_sig<0b001, "lc.sig.t1">;
+def LC_SIG_T2 : Load_sig<0b010, "lc.sig.t2">;
+def LC_SIG_T3 : Load_sig<0b011, "lc.sig.t3">;
+def LC_SIG_T4 : Load_sig<0b100, "lc.sig.t4">;
+def LC_SIG_T5 : Load_sig<0b101, "lc.sig.t5">;
+def LC_SIG_T6 : Load_sig<0b110, "lc.sig.t6">;
+let hasSideEffects = 1, mayLoad = 1, mayStore = 0 in 
+def LC_TWEAK : RVInstLT<0b111, OPC_SIG_LOAD, (outs GPR:$rd), (ins GPR:$rs1, simm12_lsb000:$imm12, uimm3:$offsel3),
+    "lc.tweak", "$rd, $offsel3, ${imm12}(${rs1})">, Sched<[WriteLDD, ReadMemBase]>;
+def : InstAlias<"lc.tweak.t0 $rd, ${imm12}(${rs1})", (LC_TWEAK GPR:$rd, GPR:$rs1, simm12:$imm12, 0)>;
+def : InstAlias<"lc.tweak.t1 $rd, ${imm12}(${rs1})", (LC_TWEAK GPR:$rd, GPR:$rs1, simm12:$imm12, 1)>;
+def : InstAlias<"lc.tweak.t2 $rd, ${imm12}(${rs1})", (LC_TWEAK GPR:$rd, GPR:$rs1, simm12:$imm12, 2)>;
+def : InstAlias<"lc.tweak.t3 $rd, ${imm12}(${rs1})", (LC_TWEAK GPR:$rd, GPR:$rs1, simm12:$imm12, 3)>;
+def : InstAlias<"lc.tweak.t4 $rd, ${imm12}(${rs1})", (LC_TWEAK GPR:$rd, GPR:$rs1, simm12:$imm12, 4)>;
+def : InstAlias<"lc.tweak.t5 $rd, ${imm12}(${rs1})", (LC_TWEAK GPR:$rd, GPR:$rs1, simm12:$imm12, 5)>;
+def : InstAlias<"lc.tweak.t6 $rd, ${imm12}(${rs1})", (LC_TWEAK GPR:$rd, GPR:$rs1, simm12:$imm12, 6)>;
+
+/*
+
+sc_sig_t0   .......  .....   ..... 000 ..... 0101011 @s
+sc_sig_t1   .......  .....   ..... 001 ..... 0101011 @s
+sc_sig_t2   .......  .....   ..... 010 ..... 0101011 @s
+sc_sig_t3   .......  .....   ..... 011 ..... 0101011 @s
+sc_sig_t4   .......  .....   ..... 100 ..... 0101011 @s
+sc_sig_t5   .......  .....   ..... 101 ..... 0101011 @s
+sc_sig_t6   .......  .....   ..... 110 ..... 0101011 @s
+sc_tweak    .......  .....   ..... 111 ..... 0101011 @s  
+
+*/
+
+def SC_SIG_T0 : Store_sig<0b000, "sc.sig.t0">;
+def SC_SIG_T1 : Store_sig<0b001, "sc.sig.t1">;
+def SC_SIG_T2 : Store_sig<0b010, "sc.sig.t2">;
+def SC_SIG_T3 : Store_sig<0b011, "sc.sig.t3">;
+def SC_SIG_T4 : Store_sig<0b100, "sc.sig.t4">;
+def SC_SIG_T5 : Store_sig<0b101, "sc.sig.t5">;
+def SC_SIG_T6 : Store_sig<0b110, "sc.sig.t6">;
+def SC_TWEAK  : Store_sig<0b111, "sc.tweak">;
 
 }

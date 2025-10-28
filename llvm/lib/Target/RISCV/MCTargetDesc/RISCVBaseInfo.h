@@ -45,6 +45,7 @@ enum {
   InstFormatCJ = 16,
   InstFormatOther = 17,
   InstFormatKey = 18,
+  InstFormatLT = 19,
 
   InstFormatMask = 31,
   InstFormatShift = 0,

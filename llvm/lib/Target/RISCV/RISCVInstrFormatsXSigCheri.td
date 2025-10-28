@@ -18,6 +18,22 @@ class RVInstKey<bit cryptoOp, bits<3> funct3, RISCVOpcode opcode, dag outs, dag 
   let Opcode = opcode.Value;
 }
 
+class RVInstLT<bits<3> funct3, RISCVOpcode opcode, dag outs, dag ins, string opcodestr,
+              string argstr>
+    : RVInst<outs, ins, opcodestr, argstr, [], InstFormatLT> {
+  bits<12> imm12;
+  bits<3> offsel3;
+  bits<5> rs1;
+  bits<5> rd;
+
+  let Inst{31-23} = imm12{11-3};
+  let Inst{22-20} = offsel3;
+  let Inst{19-15} = rs1;
+  let Inst{14-12} = funct3;
+  let Inst{11-7} = rd;
+  let Opcode = opcode.Value;
+}
+
 
 
 

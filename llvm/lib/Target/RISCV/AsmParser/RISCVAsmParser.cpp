@@ -812,6 +812,16 @@ public:
 
   bool isSImm12Lsb0() const { return isBareSimmNLsb0<12>(); }
 
+  bool isSImm12Lsb000() const {
+    if (!isImm())
+      return false;
+    RISCVMCExpr::VariantKind VK = RISCVMCExpr::VK_RISCV_None;
+    int64_t Imm;
+    bool IsConstantImm = evaluateConstantImm(getImm(), Imm, VK);
+    return IsConstantImm && isShiftedInt<9, 3>(Imm) &&
+           VK == RISCVMCExpr::VK_RISCV_None;
+  }
+
   bool isSImm12Lsb00000() const {
     if (!isImm())
       return false;

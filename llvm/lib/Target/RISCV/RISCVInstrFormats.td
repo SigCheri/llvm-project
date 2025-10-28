@@ -49,6 +49,7 @@ def InstFormatCB     : InstFormat<15>;
 def InstFormatCJ     : InstFormat<16>;
 def InstFormatOther  : InstFormat<17>;
 def InstFormatKey    : InstFormat<18>;
+def InstFormatLT     : InstFormat<19>;
 
 class RISCVVConstraint<bits<3> val> {
   bits<3> Value = val;
@@ -131,8 +132,10 @@ def OPC_MISC_MEM  : RISCVOpcode<"MISC_MEM",  0b0001111>;
 def OPC_OP_IMM    : RISCVOpcode<"OP_IMM",    0b0010011>;
 def OPC_AUIPC     : RISCVOpcode<"AUIPC",     0b0010111>;
 def OPC_OP_IMM_32 : RISCVOpcode<"OP_IMM_32", 0b0011011>;
+def OPC_SIG_LOAD  : RISCVOpcode<"SIG_LOAD",  0b0011111>;
 def OPC_STORE     : RISCVOpcode<"STORE",     0b0100011>;
 def OPC_STORE_FP  : RISCVOpcode<"STORE_FP",  0b0100111>;
+def OPC_SIG_STORE : RISCVOpcode<"SIG_STORE", 0b0101011>;
 def OPC_AMO       : RISCVOpcode<"AMO",       0b0101111>;
 def OPC_OP        : RISCVOpcode<"OP",        0b0110011>;
 def OPC_LUI       : RISCVOpcode<"LUI",       0b0110111>;
@@ -142,8 +145,8 @@ def OPC_MSUB      : RISCVOpcode<"MSUB",      0b1000111>;
 def OPC_NMSUB     : RISCVOpcode<"NMSUB",     0b1001011>;
 def OPC_NMADD     : RISCVOpcode<"NMADD",     0b1001111>;
 def OPC_OP_FP     : RISCVOpcode<"OP_FP",     0b1010011>;
-def OPC_CHERI     : RISCVOpcode<"OP_CHERI",  0b1011011>;
 def OPC_OP_V      : RISCVOpcode<"OP_V",      0b1010111>;
+def OPC_CHERI     : RISCVOpcode<"OP_CHERI",  0b1011011>;
 def OPC_BRANCH    : RISCVOpcode<"BRANCH",    0b1100011>;
 def OPC_JALR      : RISCVOpcode<"JALR",      0b1100111>;
 def OPC_KEY       : RISCVOpcode<"PEC_KEY",   0b1101011>;
