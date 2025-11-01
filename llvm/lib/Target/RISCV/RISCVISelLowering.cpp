@@ -10843,17 +10843,20 @@ static bool CC_RISCV(const DataLayout &DL, RISCVABI::ABI ABI, unsigned ValNo,
   case RISCVABI::ABI_LP64:
   case RISCVABI::ABI_IL32PC64:
   case RISCVABI::ABI_L64PC128:
+  case RISCVABI::ABI_L64PS128:
     break;
   case RISCVABI::ABI_ILP32F:
   case RISCVABI::ABI_LP64F:
   case RISCVABI::ABI_IL32PC64F:
   case RISCVABI::ABI_L64PC128F:
+  case RISCVABI::ABI_L64PS128F:
     UseGPRForF16_F32 = !IsFixed;
     break;
   case RISCVABI::ABI_ILP32D:
   case RISCVABI::ABI_LP64D:
   case RISCVABI::ABI_IL32PC64D:
   case RISCVABI::ABI_L64PC128D:
+  case RISCVABI::ABI_L64PS128D:
     UseGPRForF16_F32 = !IsFixed;
     UseGPRForF64 = !IsFixed;
     break;

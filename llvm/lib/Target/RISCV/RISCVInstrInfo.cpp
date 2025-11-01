@@ -101,6 +101,7 @@ unsigned RISCVInstrInfo::isLoadFromStackSlot(const MachineInstr &MI,
   case RISCV::CFLD:
   case RISCV::CLC_64:
   case RISCV::CLC_128:
+  case RISCV::CLC_SIG_T0:
     break;
   }
 
@@ -135,6 +136,7 @@ unsigned RISCVInstrInfo::isStoreToStackSlot(const MachineInstr &MI,
   case RISCV::CFSD:
   case RISCV::CSC_64:
   case RISCV::CSC_128:
+  case RISCV::CSC_SIG_T0:
     break;
   }
 
@@ -512,9 +514,14 @@ void RISCVInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
                                                                : RISCV::CSD;
       IsScalableVector = false;
     } else if (RISCV::GPCRRegClass.hasSubClassEq(RC)) {
-      Opcode = TRI->getRegSizeInBits(RISCV::GPCRRegClass) == 64
-                   ? RISCV::CSC_64
-                   : RISCV::CSC_128;
+      if (RISCVABI::isCheriPureCapABI(ST.getTargetABI())) {
+        assert(TRI->getRegSizeInBits(RISCV::GPCRRegClass) == 128);
+        Opcode = RISCV::CSC_SIG_T0;
+      } else {
+        Opcode = TRI->getRegSizeInBits(RISCV::GPCRRegClass) == 64
+                    ? RISCV::CSC_64
+                    : RISCV::CSC_128;
+      }
       IsScalableVector = false;
     } else if (RISCV::FPR32RegClass.hasSubClassEq(RC)) {
       Opcode = RISCV::CFSW;
@@ -632,9 +639,14 @@ void RISCVInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
                                                                : RISCV::CLD;
       IsScalableVector = false;
     } else if (RISCV::GPCRRegClass.hasSubClassEq(RC)) {
-      Opcode = TRI->getRegSizeInBits(RISCV::GPCRRegClass) == 64
-                   ? RISCV::CLC_64
-                   : RISCV::CLC_128;
+      if (RISCVABI::isCheriPureCapABI(ST.getTargetABI())) {
+        assert(TRI->getRegSizeInBits(RISCV::GPCRRegClass) == 128);
+        Opcode = RISCV::CLC_SIG_T0;
+      } else {
+        Opcode = TRI->getRegSizeInBits(RISCV::GPCRRegClass) == 64
+                    ? RISCV::CLC_64
+                    : RISCV::CLC_128;
+      }
       IsScalableVector = false;
     } else if (RISCV::FPR32RegClass.hasSubClassEq(RC)) {
       Opcode = RISCV::CFLW;

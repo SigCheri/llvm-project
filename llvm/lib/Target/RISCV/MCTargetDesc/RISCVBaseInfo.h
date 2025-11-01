@@ -379,6 +379,9 @@ enum ABI {
   ABI_L64PC128,
   ABI_L64PC128F,
   ABI_L64PC128D,
+  ABI_L64PS128,
+  ABI_L64PS128F,
+  ABI_L64PS128D,
   ABI_Unknown
 };
 
@@ -409,6 +412,35 @@ inline static bool isCheriPureCapABI(ABI TargetABI) {
   case ABI_L64PC128:
   case ABI_L64PC128F:
   case ABI_L64PC128D:
+  case ABI_L64PS128:
+  case ABI_L64PS128F:
+  case ABI_L64PS128D:
+    return true;
+  default:
+    llvm_unreachable("Improperly initialised target ABI");
+  }
+}
+
+inline static bool isSigCheriPureSigABI(ABI TargetABI) {
+  switch (TargetABI) {
+  case ABI_ILP32:
+  case ABI_ILP32F:
+  case ABI_ILP32D:
+  case ABI_ILP32E:
+  case ABI_LP64:
+  case ABI_LP64F:
+  case ABI_LP64D:
+  case ABI_IL32PC64:
+  case ABI_IL32PC64F:
+  case ABI_IL32PC64D:
+  case ABI_IL32PC64E:
+  case ABI_L64PC128:
+  case ABI_L64PC128F:
+  case ABI_L64PC128D:
+    return false;
+  case ABI_L64PS128:
+  case ABI_L64PS128F:
+  case ABI_L64PS128D:
     return true;
   default:
     llvm_unreachable("Improperly initialised target ABI");

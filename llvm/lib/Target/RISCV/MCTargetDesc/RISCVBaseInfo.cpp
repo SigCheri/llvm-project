@@ -65,6 +65,11 @@ ABI computeTargetABI(const Triple &TT, FeatureBitset FeatureBits,
               "doesn't support the XCheri instruction set extension (ignoring "
               "target-abi)\n";
     TargetABI = ABI_Unknown;
+  } else if (ABIName.startswith("l64ps") && (!FeatureBits[RISCV::FeatureCheri] || !FeatureBits[RISCV::FeatureSigCheri])) { 
+    errs() << "Pure-sigcapability ABI can't be used for a target that "
+              "doesn't support the XCheri and XSigCheri instruction set extension (ignoring "
+              "target-abi)\n";
+    TargetABI = ABI_Unknown;
   } else if (IsRV32E && TargetABI != ABI_ILP32E &&
              TargetABI != ABI_IL32PC64E && TargetABI != ABI_Unknown) {
     // TODO: move this checking to RISCVTargetLowering and RISCVAsmParser
@@ -99,6 +104,9 @@ ABI getTargetABI(StringRef ABIName) {
                        .Case("l64pc128", ABI_L64PC128)
                        .Case("l64pc128f", ABI_L64PC128F)
                        .Case("l64pc128d", ABI_L64PC128D)
+                       .Case("l64ps128", ABI_L64PS128)
+                       .Case("l64ps128f", ABI_L64PS128F)
+                       .Case("l64ps128d", ABI_L64PS128D)
                        .Default(ABI_Unknown);
   return TargetABI;
 }

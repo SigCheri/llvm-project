@@ -501,6 +501,10 @@ def IsPureCapABI
     : Predicate<"RISCVABI::isCheriPureCapABI(Subtarget->getTargetABI())">;
 def NotPureCapABI
     : Predicate<"!RISCVABI::isCheriPureCapABI(Subtarget->getTargetABI())">;
+def IsPureSigABI
+    : Predicate<"RISCVABI::isSigCheriPureSigABI(Subtarget->getTargetABI())">;
+def NotPureSigABI
+    : Predicate<"!RISCVABI::isSigCheriPureSigABI(Subtarget->getTargetABI())">;
 
 def FeatureRelax
     : SubtargetFeature<"relax", "EnableLinkerRelax", "true",

@@ -73,18 +73,21 @@ RISCVRegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const {
     return CSR_ILP32_LP64_SaveList;
   case RISCVABI::ABI_IL32PC64:
   case RISCVABI::ABI_L64PC128:
+  case RISCVABI::ABI_L64PS128:
     return CSR_IL32PC64_L64PC128_SaveList;
   case RISCVABI::ABI_ILP32F:
   case RISCVABI::ABI_LP64F:
     return CSR_ILP32F_LP64F_SaveList;
   case RISCVABI::ABI_IL32PC64F:
   case RISCVABI::ABI_L64PC128F:
+  case RISCVABI::ABI_L64PS128F:
     return CSR_IL32PC64F_L64PC128F_SaveList;
   case RISCVABI::ABI_ILP32D:
   case RISCVABI::ABI_LP64D:
     return CSR_ILP32D_LP64D_SaveList;
   case RISCVABI::ABI_IL32PC64D:
   case RISCVABI::ABI_L64PC128D:
+  case RISCVABI::ABI_L64PS128D:
     return CSR_IL32PC64D_L64PC128D_SaveList;
   }
 }
@@ -353,18 +356,21 @@ RISCVRegisterInfo::getCallPreservedMask(const MachineFunction & MF,
     return CSR_ILP32_LP64_RegMask;
   case RISCVABI::ABI_IL32PC64:
   case RISCVABI::ABI_L64PC128:
+  case RISCVABI::ABI_L64PS128:
     return CSR_IL32PC64_L64PC128_RegMask;
   case RISCVABI::ABI_ILP32F:
   case RISCVABI::ABI_LP64F:
     return CSR_ILP32F_LP64F_RegMask;
   case RISCVABI::ABI_IL32PC64F:
   case RISCVABI::ABI_L64PC128F:
+  case RISCVABI::ABI_L64PS128F:
     return CSR_IL32PC64F_L64PC128F_RegMask;
   case RISCVABI::ABI_ILP32D:
   case RISCVABI::ABI_LP64D:
     return CSR_ILP32D_LP64D_RegMask;
   case RISCVABI::ABI_IL32PC64D:
   case RISCVABI::ABI_L64PC128D:
+  case RISCVABI::ABI_L64PS128D:
     return CSR_IL32PC64D_L64PC128D_RegMask;
   }
 }
