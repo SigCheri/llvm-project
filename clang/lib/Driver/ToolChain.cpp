@@ -94,6 +94,9 @@ ToolChain::ToolChain(const Driver &D, const llvm::Triple &T,
     IsCheriPurecap = true;
   if (Triple.isRISCV() && tools::riscv::isCheriPurecap(Args, Triple))
     IsCheriPurecap = true;
+  IsSigCheriPuresig = false;
+  if (Triple.isRISCV() && tools::riscv::isSigCheriPuresig(Args, Triple))
+    IsSigCheriPuresig = true;
 
   // FIXME: Should we update triple enviroment to purecap? Or will that break RISCV?
 }
@@ -151,6 +154,10 @@ bool ToolChain::useRelaxRelocations() const {
 bool ToolChain::isCheriPurecap() const {
   return IsCheriPurecap ||
          EffectiveTriple.getEnvironment() == llvm::Triple::CheriPurecap;
+}
+
+bool ToolChain::isSigCheriPuresig() const {
+  return IsSigCheriPuresig;
 }
 
 bool ToolChain::defaultToIEEELongDouble() const {

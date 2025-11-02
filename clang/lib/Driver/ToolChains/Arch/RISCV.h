@@ -27,6 +27,7 @@ StringRef getRISCVABI(const llvm::opt::ArgList &Args,
 StringRef getRISCVArch(const llvm::opt::ArgList &Args,
                        const llvm::Triple &Triple);
 bool isCheriPurecap(const llvm::opt::ArgList &Args, const llvm::Triple &Triple);
+bool isSigCheriPuresig(const llvm::opt::ArgList &Args, const llvm::Triple &Triple);
 } // end namespace riscv
 } // namespace tools
 } // end namespace driver

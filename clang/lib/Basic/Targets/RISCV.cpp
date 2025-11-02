@@ -156,10 +156,10 @@ void RISCVTargetInfo::getTargetDefines(const LangOptions &Opts,
 
   StringRef ABIName = getABI();
   if (ABIName == "ilp32f" || ABIName == "lp64f" ||
-      ABIName == "il32pc64f" || ABIName == "l64pc128f")
+      ABIName == "il32pc64f" || ABIName == "l64pc128f" || ABIName == "l64ps128f")
     Builder.defineMacro("__riscv_float_abi_single");
   else if (ABIName == "ilp32d" || ABIName == "lp64d" ||
-           ABIName == "il32pc64d" || ABIName == "l64pc128d")
+           ABIName == "il32pc64d" || ABIName == "l64pc128d" || ABIName == "l64pc128d")
     Builder.defineMacro("__riscv_float_abi_double");
   else
     Builder.defineMacro("__riscv_float_abi_soft");

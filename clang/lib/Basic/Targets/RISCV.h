@@ -36,7 +36,8 @@ class RISCVTargetInfo : public TargetInfo {
       else
         Layout = "e-m:e-p:32:32-i64:64-n32-S128";
     } else if (ABI == "lp64" || ABI == "lp64f" || ABI == "lp64d" ||
-               ABI == "l64pc128" || ABI == "l64pc128f" || ABI == "l64pc128d") {
+               ABI == "l64pc128" || ABI == "l64pc128f" || ABI == "l64pc128d" ||
+               ABI == "l64ps128" || ABI == "l64ps128f" || ABI == "l64ps128d" ) {
       if (HasCheri)
         Layout = "e-m:e-pf200:128:128:128:64-p:64:64-i64:64-i128:128-n64-S128";
       else
@@ -213,6 +214,12 @@ public:
       return true;
     }
     if (Name == "l64pc128" || Name == "l64pc128f" || Name == "l64pc128d") {
+      setCapabilityABITypes();
+      CapabilityABI = true;
+      ABI = Name;
+      return true;
+    }
+    if (Name == "l64ps128" || Name == "l64ps128f" || Name == "l64ps128d") {
       setCapabilityABITypes();
       CapabilityABI = true;
       ABI = Name;

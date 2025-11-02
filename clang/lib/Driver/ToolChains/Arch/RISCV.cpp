@@ -57,6 +57,17 @@ static bool isCheriPurecapABIName(StringRef ABI) {
       .Case("l64pc128", true)
       .Case("l64pc128f", true)
       .Case("l64pc128d", true)
+      .Case("l64ps128", true)
+      .Case("l64ps128f", true)
+      .Case("l64ps128d", true)
+      .Default(false);
+}
+
+static bool isSigCheriPuresigABIName(StringRef ABI) {
+  return llvm::StringSwitch<bool>(ABI)
+      .Case("l64ps128", true)
+      .Case("l64ps128f", true)
+      .Case("l64ps128d", true)
       .Default(false);
 }
 
@@ -64,6 +75,11 @@ bool riscv::isCheriPurecap(const llvm::opt::ArgList &Args,
                            const llvm::Triple &Triple) {
   return isCheriPurecapABIName(getRISCVABI(Args, Triple));
 }
+
+bool riscv::isSigCheriPuresig(const llvm::opt::ArgList &Args,
+                           const llvm::Triple &Triple) {
+  return isSigCheriPuresigABIName(getRISCVABI(Args, Triple));
+} 
 
 
 // Get features except standard extension feature
@@ -178,6 +194,15 @@ void riscv::getRISCVTargetFeatures(const Driver &D, const llvm::Triple &Triple,
         return;
       }
       Features.push_back("+cap-mode");
+    }
+
+    bool IsPureSigCapability = isSigCheriPuresigABIName(A->getValue());
+    if (IsPureSigCapability) {
+      if (llvm::find(Features, "+xsigcheri") == Features.end()) {
+        D.Diag(diag::err_riscv_invalid_abi) << A->getValue()
+          << "pure capability ABI requires xcheri extension to be specified";
+        return;
+      }
     }
   }
 

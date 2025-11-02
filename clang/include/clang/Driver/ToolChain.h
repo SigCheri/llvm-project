@@ -185,6 +185,7 @@ protected:
   MultilibSet Multilibs;
   Multilib SelectedMultilib;
   bool IsCheriPurecap = false;
+  bool IsSigCheriPuresig = false;
 
   ToolChain(const Driver &D, const llvm::Triple &T,
             const llvm::opt::ArgList &Args);
@@ -441,6 +442,7 @@ public:
 
   /// Test whether this toolchain uses CHERI pure-capability compilation.
   virtual bool isCheriPurecap() const;
+  virtual bool isSigCheriPuresig() const;
 
   /// Get the default trivial automatic variable initialization.
   virtual LangOptions::TrivialAutoVarInitKind

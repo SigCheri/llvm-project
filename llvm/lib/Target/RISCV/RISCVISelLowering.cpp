@@ -91,6 +91,9 @@ RISCVTargetLowering::RISCVTargetLowering(const TargetMachine &TM,
   case RISCVABI::ABI_L64PC128:
   case RISCVABI::ABI_L64PC128F:
   case RISCVABI::ABI_L64PC128D:
+  case RISCVABI::ABI_L64PS128:
+  case RISCVABI::ABI_L64PS128F:
+  case RISCVABI::ABI_L64PS128D:
     break;
   }
 
