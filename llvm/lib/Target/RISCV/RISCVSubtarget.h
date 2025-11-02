@@ -97,6 +97,7 @@ private:
   bool HasCheri = false;
   bool HasCheriISAv9Semantics = false;
   bool IsCapMode = false;
+  bool IsSigCapMode = false;
   bool EnableLinkerRelax = false;
   bool EnableRVCHintInstrs = true;
   bool EnableCheriRVCInstrs = true;
@@ -198,6 +199,7 @@ public:
   bool hasCheri() const { return HasCheri; }
   bool hasCheriISAv9Semantics() const { return HasCheriISAv9Semantics; }
   bool isCapMode() const { return IsCapMode; }
+  bool isSigCapMode() const { return IsSigCapMode; }
   bool enableLinkerRelax() const { return EnableLinkerRelax; }
   bool enableRVCHintInstrs() const { return EnableRVCHintInstrs; }
   bool enableCheriRVCInstrs() const { return EnableCheriRVCInstrs; }

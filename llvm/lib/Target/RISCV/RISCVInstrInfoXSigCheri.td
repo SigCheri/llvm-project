@@ -140,8 +140,8 @@ def SC_SIG_T6 : Store_sig<0b110, "sc.sig.t6">;
 
 }
 
-let Predicates = [HasCheri, HasSigCheri, IsRV64, IsCapMode] in {
-let DecoderNamespace = "CapModeOnly_" in {
+let Predicates = [HasCheri, HasSigCheri, IsRV64, IsCapMode, IsSigCapMode] in {
+let DecoderNamespace = "SigCapModeOnly_" in {
 /*
 
   lc_tweak    ......... ... ..... 111 ..... 0011111 @sig_load_tweak_op

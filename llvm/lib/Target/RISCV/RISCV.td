@@ -497,6 +497,16 @@ def NotCapMode : Predicate<"!Subtarget->isCapMode()">,
                            AssemblerPredicate<(all_of (not FeatureCapMode)),
                            "Not Capability Mode">;
 
+def FeatureSigCapMode
+    : SubtargetFeature<"sigcap-mode", "IsSigCapMode", "true",
+                       "SigCapability mode">;
+def IsSigCapMode  : Predicate<"Subtarget->isSigCapMode()">,
+                           AssemblerPredicate<(all_of FeatureSigCapMode),
+                           "SigCapability Mode">;
+def NotSigCapMode : Predicate<"!Subtarget->isSigCapMode()">,
+                           AssemblerPredicate<(all_of (not FeatureSigCapMode)),
+                           "Not SigCapability Mode">;
+
 def IsPureCapABI
     : Predicate<"RISCVABI::isCheriPureCapABI(Subtarget->getTargetABI())">;
 def NotPureCapABI
