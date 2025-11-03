@@ -195,10 +195,10 @@ public:
   bool hasStdExtZmmul() const { return HasStdExtZmmul; }
   bool is64Bit() const { return HasRV64; }
   bool isRV32E() const { return IsRV32E; }
-  bool hasSigCheri() const { return HasSigCheri; }
   bool hasCheri() const { return HasCheri; }
   bool hasCheriISAv9Semantics() const { return HasCheriISAv9Semantics; }
   bool isCapMode() const { return IsCapMode; }
+  bool hasSigCheri() const { return HasSigCheri; }
   bool isSigCapMode() const { return IsSigCapMode; }
   bool enableLinkerRelax() const { return EnableLinkerRelax; }
   bool enableRVCHintInstrs() const { return EnableRVCHintInstrs; }
