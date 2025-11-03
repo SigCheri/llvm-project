@@ -41,6 +41,16 @@ def simm12_lsb000 : Operand<XLenVT>,
   }];
 }
 
+multiclass SigCheriLdPat<PatFrag LoadOp, RVInst Inst> {
+  def : Pat<(LoadOp (CapRegImm GPCR:$rs1, simm12:$imm12)),
+            (Inst GPCR:$rs1, simm12:$imm12)>;
+}
+
+multiclass SigCheriStPat<PatFrag StoreOp, RVInst Inst> {
+  def : Pat<(StoreOp GPCR:$rs2, (CapRegImm GPCR:$rs1, simm12:$imm12)),
+            (Inst GPCR:$rs2, GPCR:$rs1, simm12:$imm12)>;
+}
+
 let Predicates = [HasSigCheri, IsRV64] in {
 
 /*
@@ -140,8 +150,8 @@ def SC_SIG_T6 : Store_sig<0b110, "sc.sig.t6">;
 
 }
 
-let Predicates = [HasCheri, HasSigCheri, IsRV64, IsCapMode, IsSigCapMode] in {
-let DecoderNamespace = "SigCapModeOnly_" in {
+let Predicates = [HasCheri, HasSigCheri, IsRV64, IsCapMode] in {
+let DecoderNamespace = "CapModeOnly_" in {
 /*
 
   lc_tweak    ......... ... ..... 111 ..... 0011111 @sig_load_tweak_op
@@ -199,6 +209,11 @@ def CSC_SIG_T4 : Store_sig<0b100, "csc.sig.t4">;
 def CSC_SIG_T5 : Store_sig<0b101, "csc.sig.t5">;
 def CSC_SIG_T6 : Store_sig<0b110, "csc.sig.t6">;
 
+}
+
+let Predicates = [IsSigCapMode] in { 
+defm : SigCheriLdPat<load, CLC_SIG_T0>;
+defm : SigCheriStPat<store, CSC_SIG_T0>;
 }
 
 def : InstAlias<"clc.tweak.t0 $rd, ${imm12}(${rs1})", (CLC_TWEAK GPR:$rd, GPCR:$rs1, simm12_lsb000:$imm12, 0)>;

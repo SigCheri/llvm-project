@@ -1989,7 +1989,7 @@ defm : CheriAMOCapPat<"64", "atomic_swap_cap", "CAMOSWAP_C">;
 } // Predicates = [HasCheri, HasStdExtA, IsRV32, IsCapMode]
 
 let Predicates = [HasCheri, HasStdExtA, IsRV64, IsCapMode] in {
-defm : CheriLdPat<atomic_load_cap, CLC_128>;
+defm : CheriLdPat<atomic_load_cap, CLC_128>, Requires<[NotSigCapMode]>;
 defm : CheriAtomicStPat<atomic_store_cap, CSC_128, GPCR>;
 defm : CheriAMOCapPat<"128", "atomic_swap_cap", "CAMOSWAP_C">;
 } // Predicates = [HasCheri, HasStdExtA, IsRV64, IsCapMode]
@@ -2024,12 +2024,12 @@ defm : CheriStPat<store, CFSD, FPR64>;
 
 /// 'XCheri' extension
 
-let Predicates = [HasCheri, IsRV32, IsCapMode] in {
+let Predicates = [HasCheri, IsRV32, IsCapMode, NotSigCapMode] in {
 defm : CheriLdPat<load, CLC_64>;
 defm : CheriStPat<store, CSC_64, GPCR>;
 } // Predicates = [HasCheri, IsRV32, IsCapMode]
 
-let Predicates = [HasCheri, IsRV64, IsCapMode] in {
+let Predicates = [HasCheri, IsRV64, IsCapMode, NotSigCapMode] in {
 defm : CheriLdPat<load, CLC_128>;
 defm : CheriStPat<store, CSC_128, GPCR>;
 } // Predicates = [HasCheri, IsRV64, IsCapMode]
