@@ -148,6 +148,9 @@ def SC_SIG_T4 : Store_sig<0b100, "sc.sig.t4">;
 def SC_SIG_T5 : Store_sig<0b101, "sc.sig.t5">;
 def SC_SIG_T6 : Store_sig<0b110, "sc.sig.t6">;
 
+def : InstAlias<"lc.sig $rd, ${imm12}(${rs1})", (LC_SIG_T0 GPCR:$rd, GPCR:$rs1, simm12:$imm12)>;
+def : InstAlias<"sc.sig $rd, ${imm12}(${rs1})", (SC_SIG_T0 GPCR:$rd, GPCR:$rs1, simm12:$imm12)>;
+
 }
 
 let Predicates = [HasCheri, HasSigCheri, IsRV64, IsCapMode] in {
@@ -223,5 +226,8 @@ def : InstAlias<"clc.tweak.t3 $rd, ${imm12}(${rs1})", (CLC_TWEAK GPR:$rd, GPCR:$
 def : InstAlias<"clc.tweak.t4 $rd, ${imm12}(${rs1})", (CLC_TWEAK GPR:$rd, GPCR:$rs1, simm12_lsb000:$imm12, 4)>;
 def : InstAlias<"clc.tweak.t5 $rd, ${imm12}(${rs1})", (CLC_TWEAK GPR:$rd, GPCR:$rs1, simm12_lsb000:$imm12, 5)>;
 def : InstAlias<"clc.tweak.t6 $rd, ${imm12}(${rs1})", (CLC_TWEAK GPR:$rd, GPCR:$rs1, simm12_lsb000:$imm12, 6)>;
+
+def : InstAlias<"clc.sig $rd, ${imm12}(${rs1})", (CLC_SIG_T0 GPCR:$rd, GPCR:$rs1, simm12:$imm12)>;
+def : InstAlias<"csc.sig $rd, ${imm12}(${rs1})", (CSC_SIG_T0 GPCR:$rd, GPCR:$rs1, simm12:$imm12)>;
 
 }
