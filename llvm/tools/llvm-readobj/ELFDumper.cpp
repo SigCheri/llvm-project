@@ -1635,6 +1635,7 @@ const EnumEntry<unsigned> ElfHeaderRISCVFlags[] = {
   ENUM_ENT(EF_RISCV_TSO, "TSO"),
   ENUM_ENT(EF_RISCV_CHERIABI, "cheriabi"),
   ENUM_ENT(EF_RISCV_CAP_MODE, "capability mode"),
+  ENUM_ENT(EF_RISCV_SIGCAP_MODE, "sigcapability mode"),
 };
 
 const EnumEntry<unsigned> ElfHeaderAVRFlags[] = {

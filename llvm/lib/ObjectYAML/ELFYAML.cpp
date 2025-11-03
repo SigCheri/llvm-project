@@ -540,6 +540,7 @@ void ScalarBitSetTraits<ELFYAML::ELF_EF>::bitset(IO &IO,
     BCase(EF_RISCV_TSO);
     BCase(EF_RISCV_CHERIABI);
     BCase(EF_RISCV_CAP_MODE);
+    BCase(EF_RISCV_SIGCAP_MODE);
     break;
   case ELF::EM_AMDGPU:
     BCaseMask(EF_AMDGPU_MACH_NONE, EF_AMDGPU_MACH);

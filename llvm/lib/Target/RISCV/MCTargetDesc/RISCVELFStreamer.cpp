@@ -164,6 +164,9 @@ void RISCVTargetELFStreamer::finish() {
   if (Features[RISCV::FeatureCapMode])
     EFlags |= ELF::EF_RISCV_CAP_MODE;
 
+  if (Features[RISCV::FeatureSigCapMode])
+    EFlags |= ELF::EF_RISCV_SIGCAP_MODE;
+
   switch (ABI) {
   case RISCVABI::ABI_ILP32:
   case RISCVABI::ABI_LP64:

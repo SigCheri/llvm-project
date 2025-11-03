@@ -307,6 +307,11 @@ SubtargetFeatures ELFObjectFileBase::getRISCVFeatures() const {
     Features.AddFeature("cap-mode");
   }
 
+  if (PlatformFlags & ELF::EF_RISCV_SIGCAP_MODE) {
+    Features.AddFeature("xsigcheri");
+    Features.AddFeature("sigcap-mode");
+  }
+
   // Add features according to the ELF attribute section.
   // If there are any unrecognized features, ignore them.
   RISCVAttributeParser Attributes;
@@ -347,6 +352,8 @@ SubtargetFeatures ELFObjectFileBase::getRISCVFeatures() const {
       case 'x':
         if (Arch.startswith("xcheri"))
           Features.AddFeature("xcheri");
+        else if (Arch.startswith("xsigcheri"))
+          Features.AddFeature("xsigcheri");
         break; // Ignore unexpected features.
       }
 
