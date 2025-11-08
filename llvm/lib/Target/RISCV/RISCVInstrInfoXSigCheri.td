@@ -16,14 +16,14 @@ defvar pec_funct3_mkey = 0b000;
 defvar pec_funct3_skey = 0b001;
 
 let hasSideEffects = 0, mayLoad = 1, mayStore = 0 in
-class Load_sig<bits<3> funct3, string opcodestr>
-    : RVInstI<funct3, OPC_SIG_LOAD, (outs GPCR:$rd), (ins GPCR:$rs1, simm12:$imm12),
+class Load_sig<bits<3> funct3, string opcodestr, RegisterClass regclass>
+    : RVInstI<funct3, OPC_SIG_LOAD, (outs regclass:$rd), (ins regclass:$rs1, simm12:$imm12),
               opcodestr, "$rd, ${imm12}(${rs1})">;
 
 let hasSideEffects = 0, mayLoad = 0, mayStore = 1 in
-class Store_sig<bits<3> funct3, string opcodestr>
+class Store_sig<bits<3> funct3, string opcodestr, RegisterClass regclass>
     : RVInstS<funct3, OPC_SIG_STORE, (outs),
-              (ins GPCR:$rs2, GPCR:$rs1, simm12:$imm12),
+              (ins regclass:$rs2, regclass:$rs1, simm12:$imm12),
               opcodestr, "$rs2, ${imm12}(${rs1})">;
 
 // A 12-bit signed immediate where the least significant four bits are zero.
@@ -120,13 +120,13 @@ lc_sig_t6   ............  ..... 110 ..... 0011111 @i
 
 */
 
-def LC_SIG_T0 : Load_sig<0b000, "lc.sig.t0">;
-def LC_SIG_T1 : Load_sig<0b001, "lc.sig.t1">;
-def LC_SIG_T2 : Load_sig<0b010, "lc.sig.t2">;
-def LC_SIG_T3 : Load_sig<0b011, "lc.sig.t3">;
-def LC_SIG_T4 : Load_sig<0b100, "lc.sig.t4">;
-def LC_SIG_T5 : Load_sig<0b101, "lc.sig.t5">;
-def LC_SIG_T6 : Load_sig<0b110, "lc.sig.t6">;
+def LC_SIG_T0 : Load_sig<0b000, "lc.sig.t0", GPR>;
+def LC_SIG_T1 : Load_sig<0b001, "lc.sig.t1", GPR>;
+def LC_SIG_T2 : Load_sig<0b010, "lc.sig.t2", GPR>;
+def LC_SIG_T3 : Load_sig<0b011, "lc.sig.t3", GPR>;
+def LC_SIG_T4 : Load_sig<0b100, "lc.sig.t4", GPR>;
+def LC_SIG_T5 : Load_sig<0b101, "lc.sig.t5", GPR>;
+def LC_SIG_T6 : Load_sig<0b110, "lc.sig.t6", GPR>;
 
 /*
 
@@ -140,16 +140,16 @@ sc_sig_t6   .......  .....   ..... 110 ..... 0101011 @s
 
 */
 
-def SC_SIG_T0 : Store_sig<0b000, "sc.sig.t0">;
-def SC_SIG_T1 : Store_sig<0b001, "sc.sig.t1">;
-def SC_SIG_T2 : Store_sig<0b010, "sc.sig.t2">;
-def SC_SIG_T3 : Store_sig<0b011, "sc.sig.t3">;
-def SC_SIG_T4 : Store_sig<0b100, "sc.sig.t4">;
-def SC_SIG_T5 : Store_sig<0b101, "sc.sig.t5">;
-def SC_SIG_T6 : Store_sig<0b110, "sc.sig.t6">;
+def SC_SIG_T0 : Store_sig<0b000, "sc.sig.t0", GPR>;
+def SC_SIG_T1 : Store_sig<0b001, "sc.sig.t1", GPR>;
+def SC_SIG_T2 : Store_sig<0b010, "sc.sig.t2", GPR>;
+def SC_SIG_T3 : Store_sig<0b011, "sc.sig.t3", GPR>;
+def SC_SIG_T4 : Store_sig<0b100, "sc.sig.t4", GPR>;
+def SC_SIG_T5 : Store_sig<0b101, "sc.sig.t5", GPR>;
+def SC_SIG_T6 : Store_sig<0b110, "sc.sig.t6", GPR>;
 
-def : InstAlias<"lc.sig $rd, ${imm12}(${rs1})", (LC_SIG_T0 GPCR:$rd, GPCR:$rs1, simm12:$imm12)>;
-def : InstAlias<"sc.sig $rd, ${imm12}(${rs1})", (SC_SIG_T0 GPCR:$rd, GPCR:$rs1, simm12:$imm12)>;
+def : InstAlias<"lc.sig $rd, ${imm12}(${rs1})", (LC_SIG_T0 GPR:$rd, GPR:$rs1, simm12:$imm12)>;
+def : InstAlias<"sc.sig $rd, ${imm12}(${rs1})", (SC_SIG_T0 GPR:$rd, GPR:$rs1, simm12:$imm12)>;
 
 }
 
@@ -184,13 +184,13 @@ lc_sig_t6   ............  ..... 110 ..... 0011111 @i
 
 */
 
-def CLC_SIG_T0 : Load_sig<0b000, "clc.sig.t0">;
-def CLC_SIG_T1 : Load_sig<0b001, "clc.sig.t1">;
-def CLC_SIG_T2 : Load_sig<0b010, "clc.sig.t2">;
-def CLC_SIG_T3 : Load_sig<0b011, "clc.sig.t3">;
-def CLC_SIG_T4 : Load_sig<0b100, "clc.sig.t4">;
-def CLC_SIG_T5 : Load_sig<0b101, "clc.sig.t5">;
-def CLC_SIG_T6 : Load_sig<0b110, "clc.sig.t6">;
+def CLC_SIG_T0 : Load_sig<0b000, "clc.sig.t0", GPCR>;
+def CLC_SIG_T1 : Load_sig<0b001, "clc.sig.t1", GPCR>;
+def CLC_SIG_T2 : Load_sig<0b010, "clc.sig.t2", GPCR>;
+def CLC_SIG_T3 : Load_sig<0b011, "clc.sig.t3", GPCR>;
+def CLC_SIG_T4 : Load_sig<0b100, "clc.sig.t4", GPCR>;
+def CLC_SIG_T5 : Load_sig<0b101, "clc.sig.t5", GPCR>;
+def CLC_SIG_T6 : Load_sig<0b110, "clc.sig.t6", GPCR>;
 
 /*
 
@@ -204,19 +204,23 @@ sc_sig_t6   .......  .....   ..... 110 ..... 0101011 @s
 
 */
 
-def CSC_SIG_T0 : Store_sig<0b000, "csc.sig.t0">;
-def CSC_SIG_T1 : Store_sig<0b001, "csc.sig.t1">;
-def CSC_SIG_T2 : Store_sig<0b010, "csc.sig.t2">;
-def CSC_SIG_T3 : Store_sig<0b011, "csc.sig.t3">;
-def CSC_SIG_T4 : Store_sig<0b100, "csc.sig.t4">;
-def CSC_SIG_T5 : Store_sig<0b101, "csc.sig.t5">;
-def CSC_SIG_T6 : Store_sig<0b110, "csc.sig.t6">;
+def CSC_SIG_T0 : Store_sig<0b000, "csc.sig.t0", GPCR>;
+def CSC_SIG_T1 : Store_sig<0b001, "csc.sig.t1", GPCR>;
+def CSC_SIG_T2 : Store_sig<0b010, "csc.sig.t2", GPCR>;
+def CSC_SIG_T3 : Store_sig<0b011, "csc.sig.t3", GPCR>;
+def CSC_SIG_T4 : Store_sig<0b100, "csc.sig.t4", GPCR>;
+def CSC_SIG_T5 : Store_sig<0b101, "csc.sig.t5", GPCR>;
+def CSC_SIG_T6 : Store_sig<0b110, "csc.sig.t6", GPCR>;
 
 }
+
+def PseudoCLGC_SIG_T0 : Pseudo<(outs GPCR:$dst), (ins bare_symbol:$src), [],
+                        "clgc.sig.t0", "$dst, $src">;
 
 let Predicates = [IsSigCapMode] in { 
 defm : SigCheriLdPat<load, CLC_SIG_T0>;
 defm : SigCheriStPat<store, CSC_SIG_T0>;
+def : Pat<(riscv_clgc tglobaladdr:$in), (PseudoCLGC_SIG_T0 tglobaladdr:$in)>;
 }
 
 def : InstAlias<"clc.tweak.t0 $rd, ${imm12}(${rs1})", (CLC_TWEAK GPR:$rd, GPCR:$rs1, simm12_lsb000:$imm12, 0)>;
@@ -229,5 +233,6 @@ def : InstAlias<"clc.tweak.t6 $rd, ${imm12}(${rs1})", (CLC_TWEAK GPR:$rd, GPCR:$
 
 def : InstAlias<"clc.sig $rd, ${imm12}(${rs1})", (CLC_SIG_T0 GPCR:$rd, GPCR:$rs1, simm12:$imm12)>;
 def : InstAlias<"csc.sig $rd, ${imm12}(${rs1})", (CSC_SIG_T0 GPCR:$rd, GPCR:$rs1, simm12:$imm12)>;
+def : InstAlias<"clgc.sig $rd, $label", (PseudoCLGC_SIG_T0 GPCR:$rd, bare_symbol:$label)>;
 
 }

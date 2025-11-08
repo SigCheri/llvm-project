@@ -169,6 +169,10 @@ class RISCVAsmParser : public MCTargetAsmParser {
   // the PC-relative ABI.
   void emitCapLoadGlobalCap(MCInst &Inst, SMLoc IDLoc, MCStreamer &Out);
 
+  // Helper to emit pseudo instruction "clgc.sig.t0" used in captable addressing with
+  // the PC-relative ABI.
+  void emitCapLoadGlobalSigCap_T0(MCInst &Inst, SMLoc IDLoc, MCStreamer &Out);
+
   // Helper to emit pseudo instruction "cla.tls.ie" used in initial-exec TLS
   // addressing.
   void emitCapLoadTLSIEAddress(MCInst &Inst, SMLoc IDLoc, MCStreamer &Out);
@@ -2986,6 +2990,23 @@ void RISCVAsmParser::emitCapLoadGlobalCap(MCInst &Inst, SMLoc IDLoc,
                      IDLoc, Out);
 }
 
+void RISCVAsmParser::emitCapLoadGlobalSigCap_T0(MCInst &Inst, SMLoc IDLoc,
+                                          MCStreamer &Out) {
+  // The capability load global capability pseudo-instruction "clgc" is used in
+  // captable-indirect addressing of global symbols in the PC-relative ABI:
+  //   clgc rdest, symbol
+  // expands to
+  //   TmpLabel: AUIPCC cdest, %captab_pcrel_hi(symbol)
+  //             CLC cdest, %pcrel_lo(TmpLabel)(cdest)
+  MCOperand DestReg = Inst.getOperand(0);
+  const MCExpr *Symbol = Inst.getOperand(1).getExpr();
+  assert(isRV64());
+  unsigned SecondOpcode = RISCV::CLC_SIG_T0;
+  emitAuipccInstPair(DestReg, DestReg, Symbol,
+                     RISCVMCExpr::VK_RISCV_CAPTAB_PCREL_HI, SecondOpcode,
+                     IDLoc, Out);
+}
+
 void RISCVAsmParser::emitCapLoadTLSIEAddress(MCInst &Inst, SMLoc IDLoc,
                                              MCStreamer &Out) {
   // The capability load TLS IE address pseudo-instruction "cla.tls.ie" is used
@@ -3142,6 +3163,9 @@ bool RISCVAsmParser::processInstruction(MCInst &Inst, SMLoc IDLoc,
     return false;
   case RISCV::PseudoCLGC:
     emitCapLoadGlobalCap(Inst, IDLoc, Out);
+    return false;
+  case RISCV::PseudoCLGC_SIG_T0:
+    emitCapLoadGlobalSigCap_T0(Inst, IDLoc, Out);
     return false;
   case RISCV::PseudoCLA_TLS_IE:
     emitCapLoadTLSIEAddress(Inst, IDLoc, Out);
