@@ -144,6 +144,7 @@ void freebsd::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   const Driver &D = ToolChain.getDriver();
   const llvm::Triple::ArchType Arch = ToolChain.getArch();
   bool IsCHERIPureCapABI = ToolChain.isCheriPurecap();
+  bool IsSigCHERIPureSigABI = ToolChain.isSigCheriPuresig();
   // For CheriABI default to -pie unless -static is also passed
   // TODO: enable static PIE?
   const bool CheriAbiPIEDefault =
@@ -290,13 +291,24 @@ void freebsd::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   if (!Args.hasArg(options::OPT_nostdlib, options::OPT_nostartfiles,
                    options::OPT_r)) {
     const char *crt1 = nullptr;
-    if (!Args.hasArg(options::OPT_shared)) {
-      if (Args.hasArg(options::OPT_pg))
-        crt1 = "gcrt1.o";
-      else if (IsPIE)
-        crt1 = "Scrt1.o";
-      else
-        crt1 = "crt1.o";
+    if(IsSigCHERIPureSigABI){
+      if (!Args.hasArg(options::OPT_shared)) {
+        if (Args.hasArg(options::OPT_pg))
+          crt1 = "gcrt1_sig.o"; // it is not supported in sig abi
+        else if (IsPIE)
+          crt1 = "Scrt1_sig.o";
+        else
+          crt1 = "crt1_sig.o";
+      }
+    }else{
+      if (!Args.hasArg(options::OPT_shared)) {
+        if (Args.hasArg(options::OPT_pg))
+          crt1 = "gcrt1.o";
+        else if (IsPIE)
+          crt1 = "Scrt1.o";
+        else
+          crt1 = "crt1.o";
+      }
     }
     if (crt1)
       CmdArgs.push_back(Args.MakeArgString(ToolChain.GetFilePath(crt1)));
@@ -306,12 +318,21 @@ void freebsd::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       CmdArgs.push_back(Args.MakeArgString(ToolChain.GetFilePath("crti.o")));
 
     const char *crtbegin = nullptr;
-    if (Args.hasArg(options::OPT_shared) || IsPIE)
-      crtbegin = "crtbeginS.o";
-    else if (Args.hasArg(options::OPT_static))
-      crtbegin = "crtbeginT.o";
-    else
-      crtbegin = "crtbegin.o";
+    if(IsSigCHERIPureSigABI){
+      if (Args.hasArg(options::OPT_shared) || IsPIE)
+        crtbegin = "crtbeginS_sig.o";
+      else if (Args.hasArg(options::OPT_static))
+        crtbegin = "crtbeginT_sig.o";
+      else
+        crtbegin = "crtbegin_sig.o";
+    }else{
+      if (Args.hasArg(options::OPT_shared) || IsPIE)
+        crtbegin = "crtbeginS.o";
+      else if (Args.hasArg(options::OPT_static))
+        crtbegin = "crtbeginT.o";
+      else
+        crtbegin = "crtbegin.o";
+    }
 
     CmdArgs.push_back(Args.MakeArgString(ToolChain.GetFilePath(crtbegin)));
   }
@@ -406,10 +427,17 @@ void freebsd::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
   if (!Args.hasArg(options::OPT_nostdlib, options::OPT_nostartfiles,
                    options::OPT_r)) {
-    if (Args.hasArg(options::OPT_shared) || IsPIE)
-      CmdArgs.push_back(Args.MakeArgString(ToolChain.GetFilePath("crtendS.o")));
-    else
-      CmdArgs.push_back(Args.MakeArgString(ToolChain.GetFilePath("crtend.o")));
+    if(IsSigCHERIPureSigABI){
+      if (Args.hasArg(options::OPT_shared) || IsPIE)
+        CmdArgs.push_back(Args.MakeArgString(ToolChain.GetFilePath("crtendS_sig.o")));
+      else
+        CmdArgs.push_back(Args.MakeArgString(ToolChain.GetFilePath("crtend_sig.o")));
+    }else{
+      if (Args.hasArg(options::OPT_shared) || IsPIE)
+        CmdArgs.push_back(Args.MakeArgString(ToolChain.GetFilePath("crtendS.o")));
+      else
+        CmdArgs.push_back(Args.MakeArgString(ToolChain.GetFilePath("crtend.o")));
+    }
 
     // Don't support .init and .fini sections for CheriABI.
     if (!IsCHERIPureCapABI)
