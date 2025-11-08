@@ -514,7 +514,7 @@ void RISCVInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
                                                                : RISCV::CSD;
       IsScalableVector = false;
     } else if (RISCV::GPCRRegClass.hasSubClassEq(RC)) {
-      if (RISCVABI::isCheriPureCapABI(ST.getTargetABI())) {
+      if (RISCVABI::isSigCheriPureSigABI(ST.getTargetABI())) {
         assert(TRI->getRegSizeInBits(RISCV::GPCRRegClass) == 128);
         Opcode = RISCV::CSC_SIG_T0;
       } else {
@@ -639,7 +639,7 @@ void RISCVInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
                                                                : RISCV::CLD;
       IsScalableVector = false;
     } else if (RISCV::GPCRRegClass.hasSubClassEq(RC)) {
-      if (RISCVABI::isCheriPureCapABI(ST.getTargetABI())) {
+      if (RISCVABI::isSigCheriPureSigABI(ST.getTargetABI())) {
         assert(TRI->getRegSizeInBits(RISCV::GPCRRegClass) == 128);
         Opcode = RISCV::CLC_SIG_T0;
       } else {
