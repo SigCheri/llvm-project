@@ -100,6 +100,7 @@ def SC_TWEAK  : RVInstS<0b111, OPC_SIG_STORE, (outs),
               (ins GPR:$rs2, GPR:$rs1, simm12:$imm12),
               "sc.tweak", "$rs2, ${imm12}(${rs1})">;
 
+def : InstAlias<"lc.tweak $rd, ${imm12}(${rs1})", (LC_TWEAK GPR:$rd, GPR:$rs1, simm12_lsb000:$imm12, 0)>;
 def : InstAlias<"lc.tweak.t0 $rd, ${imm12}(${rs1})", (LC_TWEAK GPR:$rd, GPR:$rs1, simm12_lsb000:$imm12, 0)>;
 def : InstAlias<"lc.tweak.t1 $rd, ${imm12}(${rs1})", (LC_TWEAK GPR:$rd, GPR:$rs1, simm12_lsb000:$imm12, 1)>;
 def : InstAlias<"lc.tweak.t2 $rd, ${imm12}(${rs1})", (LC_TWEAK GPR:$rd, GPR:$rs1, simm12_lsb000:$imm12, 2)>;
