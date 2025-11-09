@@ -223,6 +223,7 @@ defm : SigCheriStPat<store, CSC_SIG_T0>;
 def : Pat<(riscv_clgc tglobaladdr:$in), (PseudoCLGC_SIG_T0 tglobaladdr:$in)>;
 }
 
+def : InstAlias<"clc.tweak $rd, ${imm12}(${rs1})", (CLC_TWEAK GPR:$rd, GPCR:$rs1, simm12_lsb000:$imm12, 0)>;
 def : InstAlias<"clc.tweak.t0 $rd, ${imm12}(${rs1})", (CLC_TWEAK GPR:$rd, GPCR:$rs1, simm12_lsb000:$imm12, 0)>;
 def : InstAlias<"clc.tweak.t1 $rd, ${imm12}(${rs1})", (CLC_TWEAK GPR:$rd, GPCR:$rs1, simm12_lsb000:$imm12, 1)>;
 def : InstAlias<"clc.tweak.t2 $rd, ${imm12}(${rs1})", (CLC_TWEAK GPR:$rd, GPCR:$rs1, simm12_lsb000:$imm12, 2)>;
